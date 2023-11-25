@@ -3,7 +3,9 @@ package org.jameel.dto;
 import lombok.ToString;
 
 @ToString
-public class Course {
+public class Course { private static int nextId = 1;
+    private static final int MAX_STUDENT_NUM = 5;
+
     private double credit;
     private String id;
     private Student[] students;
@@ -11,8 +13,6 @@ public class Course {
     private int studentNum;
     private Teacher teacher;
     private String courseName;
-    private static int nextId = 1;
-    private static final int MAX_STUDENT_NUM = 5;
 
     public Course(double credit, String courseName, Department department) {
         this.credit = credit;
