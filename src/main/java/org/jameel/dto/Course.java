@@ -19,7 +19,7 @@ public class Course { private static int nextId = 1;
         this.id = String.format("C%03d", nextId++);
         this.students = new Student[MAX_STUDENT_NUM];
         this.department = department;
-        this.studentNum = students.length;
+        this.studentNum = studentNum;
         this.teacher = new Teacher("null", "null", department);
         this.courseName = courseName;
     }
