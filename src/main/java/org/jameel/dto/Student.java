@@ -4,7 +4,7 @@ import lombok.ToString;
 
 @ToString
 public class Student {
-    private static final int MAX_COURSE_NUM = 30;
+    private static final int MAX_COURSE_NUM = 5;
     private static int nextId = 1;
 
     private String fName;
