@@ -19,7 +19,7 @@ public class Student {
         this.lName = lName;
         this.courses = new Course[MAX_COURSE_NUM];
         this.id = String.format("S%03d", nextId++);
-        courseNum = courses.length;
+        courseNum = courseNum;
         this.department = department;
     }
 }
