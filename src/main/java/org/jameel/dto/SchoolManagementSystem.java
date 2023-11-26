@@ -30,11 +30,11 @@ public class SchoolManagementSystem {
 
     public void addDepartment(String departmentName) {}
 
-    public void addStudent(String lName, String fName, String string ) {}
+    public void addStudent(String lName, String fName, String departmentId ) {}
 
-    public void addTeacher(String lName, String fName, String string) {}
+    public void addTeacher(String lName, String fName, String departmentId) {}
 
-    public void addCourse(String courseName, double credit, String string) {}
+    public void addCourse(String courseName, double credit, String departmentId) {}
 
     public void registerCourse(String studentId, String courseId) {}
 
