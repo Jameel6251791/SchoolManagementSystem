@@ -1,5 +1,8 @@
 package org.jameel.dto;
 
+import lombok.Getter;
+
+@Getter
 public class Teacher {
     private static int nextId = 1;
 

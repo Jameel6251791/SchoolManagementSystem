@@ -1,8 +1,10 @@
 package org.jameel.dto;
 
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
+@Getter
 public class Department {
     private static int nextId = 1;
 
