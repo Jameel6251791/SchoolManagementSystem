@@ -1,6 +1,7 @@
 package org.jameel.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Teacher {
@@ -9,22 +10,29 @@ public class Teacher {
     private String lName;
     private String fName;
     private Department department;
+    @Setter private Course course;
     private String id;
 
-    public Teacher(String lName, String fName, Department department) {
-        this.lName = lName;
+
+    public Teacher(String fName, String lName, Department department) {
         this.fName = fName;
+        this.lName = lName;
         this.department = department;
+        this.course = null;
         this.id = String.format("T%03d", nextId++);
     }
 
     @Override
     public String toString() {
-        return "Teacher{" + "name='" + fName + " " + lName + '\'' +
-                ", lName='" + lName + '\'' +
-                ", fName='" + fName + '\'' +
-                ", department=" + department +
-                ", id='" + id + '\'' +
+        String courseString = "None";
+        if (course != null) {
+            courseString = course.getCourseName();
+        }
+        return "Teacher{" +
+                "First Name: " + fName +", Last Name: " + lName +
+                ", Department: " + department.getDepartmentName() +
+                ", Course: " + courseString +
+                ", ID: " + id +
                 '}';
     }
 }

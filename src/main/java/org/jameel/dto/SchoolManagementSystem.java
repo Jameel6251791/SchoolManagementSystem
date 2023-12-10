@@ -1,15 +1,11 @@
 package org.jameel.dto;
 
-import java.util.Scanner;
-
 public class SchoolManagementSystem {
-    Scanner console = new Scanner(System.in);
     private static final int MAX_NUM_DEPARTMENT = 5;
     private static final int MAX_NUM_STUDENT = 200;
     private static final int MAX_NUM_TEACHER = 20;
     private static final int MAX_NUM_COURSE = 30;
 
-    private String systemName;
     private Department[] departments;
     private Student[] students;
     private Teacher[] teachers;
@@ -19,8 +15,7 @@ public class SchoolManagementSystem {
     private int teacherCounter = 0;
     private int courseCounter = 0;
 
-    public SchoolManagementSystem(String systemName) {
-        this.systemName = systemName;
+    public SchoolManagementSystem() {
         this.departments = new Department[MAX_NUM_DEPARTMENT];
         this.students = new Student[MAX_NUM_STUDENT];
         this.teachers = new Teacher[MAX_NUM_TEACHER];
@@ -34,8 +29,10 @@ public class SchoolManagementSystem {
      */
     public Department findDepartment(String departmentId) {
         for (Department department : departments) {
-            if (department.getId().equals(departmentId)) {
-                return department;
+            if (department != null) {
+                if (department.getId().equals(departmentId)) {
+                    return department;
+                }
             }
         }
         return null;
@@ -48,8 +45,10 @@ public class SchoolManagementSystem {
      */
     public Student findStudent(String studentId) {
         for (Student student : students) {
-            if (student.getId().equals(studentId)) {
-                return student;
+            if (student != null) {
+                if (student.getId().equals(studentId)) {
+                    return student;
+                }
             }
         }
         return null;
@@ -62,8 +61,10 @@ public class SchoolManagementSystem {
      */
     public Teacher findTeacher(String teacherId) {
         for (Teacher teacher : teachers) {
-            if (teacher.getId().equals(teacherId)) {
-                return teacher;
+            if (teacher != null) {
+                if (teacher.getId().equals(teacherId)) {
+                    return teacher;
+                }
             }
         }
         return null;
@@ -76,8 +77,10 @@ public class SchoolManagementSystem {
      */
     public Course findCourse(String courseId) {
         for (Course course : courses) {
-            if (course.getId().equals(courseId)) {
-                return course;
+            if (course != null) {
+                if (course.getId().equals(courseId)) {
+                    return course;
+                }
             }
         }
         return null;
@@ -153,9 +156,11 @@ public class SchoolManagementSystem {
      */
     public void addCourse(String courseName, double credit, String departmentId) {
         if (courseCounter < MAX_NUM_COURSE) {
-            for (int i = 0; i < courses.length ; i++) {
+            for (int i = 0; i < courses.length; i++) {
                 if (courses[i] == null) {
                     courses[i] = new Course(courseName, credit, findDepartment(departmentId));
+                    courseCounter++;
+                    break;
                 }
             }
         } else {
@@ -170,16 +175,44 @@ public class SchoolManagementSystem {
      * @param courseId  student ID
      */
     public void registerCourse(String studentId, String courseId) {
-        Course course = findCourse(courseId);
-        Student student = findStudent(studentId);
+        if (findCourse(courseId) != null) {
+            Course course = findCourse(courseId);
 
-        for (int i = 0; i < student.getCourses().length; i++) {
-            if (student.getCourses()[i] == null) {
-                student.getCourses()[i] = course;
-                break;
+            if (findStudent(studentId) != null) {
+                Student student = findStudent(studentId);
+
+                if (student.getCourseNum() >= Student.MAX_COURSE_NUM) {
+                    System.out.printf("Max number of courses reached for student %s %s\n", student.getFName(), student.getLName());
+                } else if (course.getStudentNum() >= Student.MAX_COURSE_NUM) {
+                    System.out.printf("Max number of students in course: %s\n", course.getCourseName());
+                } else {
+                    for (int i = 0; i < course.getStudents().length; i++) {
+                        if (student.getCourses()[i] != null && student.getCourses()[i].equals(course)) {
+                            System.out.printf("Student: %s %s already registered to this course: %s\n", student.getFName(), student.getLName(), course.getCourseName());
+                            return;
+                        }
+                        if (course.getStudents()[i] == null) {
+                            course.getStudents()[i] = student;
+                            course.setStudentNum(course.getStudentNum() + 1);
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < student.getCourses().length; i++) {
+                        if (student.getCourses()[i] == null) {
+                            student.getCourses()[i] = course;
+                            student.setCourseNum(student.getCourseNum() + 1);
+                            break;
+                        }
+                    }
+                    System.out.printf("Student: %s %s registered successfully to course: %s\n", student.getFName(), student.getLName(), course.getCourseName());
+                }
+            } else {
+                System.out.println("Invalid Student ID");
             }
+        } else {
+            System.out.println("Invalid Course ID");
         }
-
     }
 
     /**
@@ -189,29 +222,93 @@ public class SchoolManagementSystem {
      * @param courseId  course ID
      */
     public void modifyCourseTeacher(String teacherId, String courseId) {
+        if (findTeacher(teacherId) != null) {
+            Teacher teacher = findTeacher(teacherId);
+
+            if (findCourse(courseId) != null) {
+                Course course = findCourse(courseId);
+
+                for (Course cours : courses) {
+                    if (cours != null && cours.getTeacher() != null && cours.getTeacher().equals(teacher)) {
+                        cours.setTeacher(null);
+                        System.out.printf("Teacher, %s %s unassigned from course, %s. ", teacher.getFName(), teacher.getLName(), cours.getCourseName());
+                    }
+                }
+
+                for (Teacher teach : teachers) {
+                    if (teach != null && teach.getCourse() != null && teach.getCourse().equals(course)) {
+                        teach.setCourse(null);
+                        System.out.printf("Teacher, %s %s unassigned from course, %s. ", teach.getFName(), teach.getLName(), course.getCourseName());
+                    }
+                }
+
+                teacher.setCourse(course);
+                course.setTeacher(teacher);
+                System.out.printf("Teacher: %s %s assigned successfully to course: %s\n", teacher.getFName(), teacher.getLName(), course.getCourseName());
+
+            } else {
+                System.out.println("Invalid Course ID");
+            }
+        } else {
+            System.out.println("Invalid Teacher ID");
+        }
+
     }
 
     /**
      * prints all departments
      */
     public void printDepartments() {
+        String departmentString = "\n";
+
+        for (Department department : departments) {
+            if (department != null) {
+                departmentString += department + "\n";
+            }
+        }
+        System.out.println("Displaying departments: " + departmentString);
     }
 
     /**
      * prints all students
      */
     public void printStudents() {
+        String studentString = "\n";
+
+        for (Student student : students) {
+            if (student != null) {
+                studentString += student + "\n";
+            }
+        }
+        System.out.println("Displaying students: " + studentString);
     }
 
     /**
      * prints all teachers
      */
     public void printTeacher() {
+        String teacherString = "\n";
+
+        for (Teacher teacher : teachers) {
+            if (teacher != null) {
+                teacherString += teacher + "\n";
+            }
+        }
+        System.out.println("Displaying teachers: " + teacherString);
+
     }
 
     /**
      * prints all courses
      */
     public void printCourses() {
+        String courseString = "\n";
+
+        for (Course course : courses) {
+            if (course != null) {
+                courseString += course + "\n";
+            }
+        }
+        System.out.println("Displaying courses: " + courseString);
     }
 }

@@ -1,9 +1,7 @@
 package org.jameel.dto;
 
 import lombok.Getter;
-import lombok.ToString;
-
-import java.util.Arrays;
+import lombok.Setter;
 
 @Getter
 public class Course {
@@ -14,8 +12,8 @@ public class Course {
     private String id;
     private Student[] students;
     private Department department;
-    public int studentNum;
-    private Teacher teacher;
+    @Setter private int studentNum;
+    @Setter private Teacher teacher;
     private String courseName;
 
     public Course(String courseName, double credit, Department department) {
@@ -23,19 +21,43 @@ public class Course {
         this.id = String.format("C%03d", nextId++);
         this.students = new Student[MAX_STUDENT_NUM];
         this.department = department;
-        this.teacher = new Teacher("null", "null", department);
+        this.teacher = null;
         this.courseName = courseName;
     }
 
     @Override
     public String toString() {
+        String studentString = "[";
+        int lastIdx = MAX_STUDENT_NUM - 1;
+
+        for (int i = 0; i < students.length; i++) {
+            if (students[i] == null) {
+                lastIdx = i - 1;
+                break;
+            }
+        }
+
+        for (int i = 0; i < students.length; i++) {
+            if (i == lastIdx) {
+                studentString += students[i].getFName() + " " + students[i].getLName();
+            } else if (students[i] != null) {
+                studentString += students[i].getFName() + " " + students[i].getLName() + ", ";
+            }
+        }
+        studentString += "]";
+
+        String teacherString = "None";
+        if (teacher != null) {
+            teacherString = teacher.getFName() + " " + teacher.getLName();
+        }
+
         return "Course{" +
-                "credit=" + credit +
-                ", id='" + id + '\'' +
-                ", students=" + Arrays.toString(students) +
-                ", department=" + department +
-                ", teacher=" + teacher +
-                ", courseName='" + courseName + '\'' +
+                "Course Name: " + courseName +
+                ", Credit: " + credit +
+                ", Students: " + studentString +
+                ", Teacher: " + teacherString +
+                ", Department: " + department.getDepartmentName() +
+                ", ID: " + id +
                 '}';
     }
 }
