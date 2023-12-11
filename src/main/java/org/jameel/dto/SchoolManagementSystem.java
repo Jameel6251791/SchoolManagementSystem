@@ -5,6 +5,7 @@ package org.jameel.dto;
  * of a school. Contains methods for adding departments, students, teachers, and courses,
  * as well as methods to find, register, and modify information related to students, teachers, and courses.
  * Also includes a methods that display all departments, students, teachers, and courses that have been added.
+ *
  * @author Jameel Hassan
  */
 public class SchoolManagementSystem {
@@ -281,32 +282,10 @@ public class SchoolManagementSystem {
             if (findCourse(courseId) != null) {
                 Course course = findCourse(courseId);
 
-                // Goes through all the courses in the course array of SchoolManagementSystem.
-                // If a course has the same teacher as the teacher found using findTeacher earlier in the method,
-                // changes the teacher in that course to null to ensure that the teacher is only assigned to a single course.
-                for (Course courseArray : courses) {
-                    if (courseArray != null && courseArray.getTeacher() != null && courseArray.getTeacher().equals(teacher)) {
-                        courseArray.setTeacher(null);
-                        System.out.printf("\nTeacher %s unassigned from course %s. ", teacherId, courseArray.getId());
-                        break;
-                    }
-                }
-                // Goes through all the teacher in the teacher array of SchoolManagementSystem.
-                // If a teacher is assigned to the same course as the course found using findCourse earlier in the method,
-                // changes the course assigned to that teacher to null to ensure that several course are not assigned to the same teacher.
-                for (Teacher teachArray : teachers) {
-                    if (teachArray != null && teachArray.getCourse() != null && teachArray.getCourse().equals(course)) {
-                        teachArray.setCourse(null);
-                        System.out.printf("\nTeacher %s unassigned from course %s. ", teachArray.getId(), courseId);
-                        break;
-                    }
-                }
-                // Assigns the course to the course array in object teacher
-                // and the teacher to the teacher array in the object course
-                teacher.setCourse(course);
+                // assigns the teacher to the teacher array in the object course
                 course.setTeacher(teacher);
                 System.out.printf("\nTeacher %s assigned successfully to course %s\n" +
-                        "Latest course info: %s\nLatest teacher info: %s\n", teacherId, courseId, course, teacher);
+                        "Latest course info: %s\n", teacherId, courseId, course);
             } else {
                 System.out.printf("\nCannot find any course match with courseId %s, " +
                         "modify teacher %s for course %s failed.\n", courseId, teacherId, courseId);
@@ -319,6 +298,7 @@ public class SchoolManagementSystem {
 
     /**
      * prints all departments that are nor null
+     *
      * @author Jameel Hassan
      */
     public void printDepartments() {
@@ -334,6 +314,7 @@ public class SchoolManagementSystem {
 
     /**
      * prints all students that are not null
+     *
      * @author Jameel Hassan
      */
     public void printStudents() {
@@ -349,6 +330,7 @@ public class SchoolManagementSystem {
 
     /**
      * prints all teachers that are not null
+     *
      * @author Jameel Hassan
      */
     public void printTeacher() {
@@ -364,6 +346,7 @@ public class SchoolManagementSystem {
 
     /**
      * prints all courses that are not null
+     *
      * @author Jameel Hassan
      */
     public void printCourses() {
