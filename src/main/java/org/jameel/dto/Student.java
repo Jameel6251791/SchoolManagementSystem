@@ -3,6 +3,11 @@ package org.jameel.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Student class with field variables: first name, last name, courses, courseNum, department and ID
+ * as well as methods: constructor and toString
+ * @author Jameel Hassan
+ */
 @Getter
 public class Student {
     private static int nextId = 1;
@@ -15,6 +20,13 @@ public class Student {
     private Department department;
     private String id;
 
+    /**
+     * Constructor with parameters first name, last name and department.
+     * Initializes first name, last name, courses, department and ID
+     * @param fName first name
+     * @param lName last name
+     * @param department department
+     */
     public Student(String fName, String lName, Department department) {
         this.fName = fName;
         this.lName = lName;
@@ -23,10 +35,15 @@ public class Student {
         this.department = department;
     }
 
+    /**
+     * Creates a string that contains the first name, the last name, all courses in the course array that are not null,
+     * the department and the ID
+     * @return a string
+     */
     @Override
     public String toString() {
         String courseString = "[";
-        int lastIdx = MAX_COURSE_NUM - 1;
+        int lastIdx = courses.length - 1;
 
         for (int i = 0; i < courses.length; i++) {
             if (courses[i] == null) {
@@ -43,7 +60,6 @@ public class Student {
             }
         }
         courseString += "]";
-
 
         return "Student{" +
                 "First Name: " + fName +

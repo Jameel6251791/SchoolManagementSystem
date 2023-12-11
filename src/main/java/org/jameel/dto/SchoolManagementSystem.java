@@ -1,5 +1,12 @@
 package org.jameel.dto;
 
+/**
+ * SchoolManagementSystem class is a system for managing departments, students, teachers, and courses
+ * of a school. Contains methods for adding departments, students, teachers, and courses,
+ * as well as methods to find, register, and modify information related to students, teachers, and courses.
+ * Also includes a methods that display all departments, students, teachers, and courses that have been added.
+ * @author Jameel Hassan
+ */
 public class SchoolManagementSystem {
     private static final int MAX_NUM_DEPARTMENT = 5;
     private static final int MAX_NUM_STUDENT = 200;
@@ -16,6 +23,12 @@ public class SchoolManagementSystem {
     private int teacherCounter = 0;
     private int courseCounter = 0;
 
+    /**
+     * Constructor with parameter school name. Initializes department array, student array, teacher array and course array
+     *
+     * @param schoolName school name
+     * @author Jameel Hassan
+     */
     public SchoolManagementSystem(String schoolName) {
         this.schoolName = schoolName;
         this.departments = new Department[MAX_NUM_DEPARTMENT];
@@ -25,9 +38,10 @@ public class SchoolManagementSystem {
     }
 
     /**
-     * Finds a department based on department ID
+     * Finds a department based on department ID. If it can't be found returns null
      *
      * @param departmentId department ID
+     * @return department
      */
     public Department findDepartment(String departmentId) {
         for (Department department : departments) {
@@ -41,9 +55,11 @@ public class SchoolManagementSystem {
     }
 
     /**
-     * Finds a student based on student ID
+     * Finds a student based on student ID. If it can't be found returns null
      *
      * @param studentId student ID
+     * @return student
+     * @author Jameel Hassan
      */
     public Student findStudent(String studentId) {
         for (Student student : students) {
@@ -57,9 +73,11 @@ public class SchoolManagementSystem {
     }
 
     /**
-     * Finds a teacher based on teacher ID
+     * Finds a teacher based on teacher ID. If it can't be found returns null
      *
      * @param teacherId teacher ID
+     * @return teacher
+     * @author Jameel Hassan
      */
     public Teacher findTeacher(String teacherId) {
         for (Teacher teacher : teachers) {
@@ -73,9 +91,11 @@ public class SchoolManagementSystem {
     }
 
     /**
-     * Finds a course based on course ID
+     * Finds a course based on course ID. If it can't be found returns null
      *
      * @param courseId course ID
+     * @return course
+     * @author Jameel Hassan
      */
     public Course findCourse(String courseId) {
         for (Course course : courses) {
@@ -92,6 +112,7 @@ public class SchoolManagementSystem {
      * Adds a new department
      *
      * @param departmentName department name
+     * @author Jameel Hassan
      */
     public void addDepartment(String departmentName) {
         if (departmentCounter < MAX_NUM_DEPARTMENT) {
@@ -114,6 +135,7 @@ public class SchoolManagementSystem {
      * @param lName        student's last name
      * @param fName        student's first name
      * @param departmentId student's department ID
+     * @author Jameel Hassan
      */
     public void addStudent(String lName, String fName, String departmentId) {
         if (studentCounter < MAX_NUM_STUDENT) {
@@ -136,6 +158,7 @@ public class SchoolManagementSystem {
      * @param lName        teacher's last name
      * @param fName        teacher's first name
      * @param departmentId teacher's department ID
+     * @author Jameel Hassan
      */
     public void addTeacher(String lName, String fName, String departmentId) {
         if (teacherCounter < MAX_NUM_TEACHER) {
@@ -158,6 +181,7 @@ public class SchoolManagementSystem {
      * @param courseName   course name
      * @param credit       course credit value
      * @param departmentId course's department ID
+     * @author Jameel Hassan
      */
     public void addCourse(String courseName, double credit, String departmentId) {
         if (courseCounter < MAX_NUM_COURSE) {
@@ -179,46 +203,63 @@ public class SchoolManagementSystem {
      *
      * @param studentId student ID
      * @param courseId  student ID
+     * @author Jameel Hassan
      */
     public void registerCourse(String studentId, String courseId) {
+        // If a course cannot be found using findCourse method, prints warning. Registration failed.
+        // Otherwise, continues method
         if (findCourse(courseId) != null) {
             Course course = findCourse(courseId);
 
+            // if a student cannot be found using findStudent method, print warning. Registration failed.
+            // Otherwise, continues method.
             if (findStudent(studentId) != null) {
                 Student student = findStudent(studentId);
 
                 if (student.getCourseNum() >= Student.MAX_COURSE_NUM) {
-                    System.out.printf("\nStudent %s has already registered 5 courses, register course %s for student %s failed.\n", studentId, courseId, studentId);
+                    System.out.printf("\nStudent %s has already registered 5 courses, " +
+                            "register course %s for student %s failed.\n", studentId, courseId, studentId);
                 } else if (course.getStudentNum() >= Student.MAX_COURSE_NUM) {
-                    System.out.printf("\nCourse %s has been fully registered, register course %s for student %s failed.\n", courseId, courseId, studentId);
+                    System.out.printf("\nCourse %s has been fully registered, " +
+                            "register course %s for student %s failed.\n", courseId, courseId, studentId);
                 } else {
+                    // Goes through all the students in the student array of the object course.
                     for (int i = 0; i < course.getStudents().length; i++) {
-                        if (student.getCourses()[i] != null && student.getCourses()[i].equals(course)) {
+                        // If a student in the array matches with the student found using findStudent earlier in the method,
+                        // prints warning. Registration failed. Otherwise, continues method.
+                        if (course.getStudents()[i] != null && course.getStudents()[i].equals(student)) {
                             System.out.printf("\nStudent %s has already registered Course %s, register course %s " +
                                     "for student %s failed.\n", studentId, courseId, courseId, studentId);
                             return;
                         }
+                        // if a student in the array is null, the null student is replaced with
+                        // the student found using findStudent earlier in the method
                         if (course.getStudents()[i] == null) {
                             course.getStudents()[i] = student;
                             course.setStudentNum(course.getStudentNum() + 1);
                             break;
                         }
                     }
-
+                    // Goes through all the courses in the course array of the object student
                     for (int i = 0; i < student.getCourses().length; i++) {
+                        // if a course in the array is null, the null course is replaced with
+                        // the course found using findCourse earlier in the method.
                         if (student.getCourses()[i] == null) {
                             student.getCourses()[i] = course;
                             student.setCourseNum(student.getCourseNum() + 1);
                             break;
                         }
                     }
-                    System.out.printf("\nStudent %s registered to course %s successfully\nLatest student info: %s\nLatest course info: %s\n", studentId, courseId, student, course );
+                    System.out.printf("\nStudent %s registered to course %s successfully\n" +
+                            "Latest student info: %s\nLatest course info: %s\n", studentId, courseId, student, course);
                 }
             } else {
-                System.out.printf("\nCannot find any student match with studentId %s, registration to course %s failed.\n", studentId, courseId);
+                System.out.printf("\nCannot find any student match with studentId %s, " +
+                        "registration to course %s failed.\n", studentId, courseId);
             }
         } else {
-            System.out.printf("\nCannot find any course match with courseId %s, register course for student %s failed.\n", courseId, studentId);
+            System.out.printf("\nCannot find any course match with courseId %s, " +
+                    "register course for student %s failed.\n", courseId, studentId);
         }
     }
 
@@ -227,41 +268,58 @@ public class SchoolManagementSystem {
      *
      * @param teacherId teacher ID
      * @param courseId  course ID
+     * @author Jameel Hassan
      */
     public void modifyCourseTeacher(String teacherId, String courseId) {
+        // if teacher cannot be found using method findTeacher, prints warning. Modification failed.
+        // Otherwise, continues method.
         if (findTeacher(teacherId) != null) {
             Teacher teacher = findTeacher(teacherId);
 
+            // if a course cannot be found using method find Course, prints warning. Modification failed.
+            // Otherwise, continues method.
             if (findCourse(courseId) != null) {
                 Course course = findCourse(courseId);
 
+                // Goes through all the courses in the course array of SchoolManagementSystem.
+                // If a course has the same teacher as the teacher found using findTeacher earlier in the method,
+                // changes the teacher in that course to null to ensure that the teacher is only assigned to a single course.
                 for (Course courseArray : courses) {
                     if (courseArray != null && courseArray.getTeacher() != null && courseArray.getTeacher().equals(teacher)) {
                         courseArray.setTeacher(null);
                         System.out.printf("\nTeacher %s unassigned from course %s. ", teacherId, courseArray.getId());
+                        break;
                     }
                 }
-
+                // Goes through all the teacher in the teacher array of SchoolManagementSystem.
+                // If a teacher is assigned to the same course as the course found using findCourse earlier in the method,
+                // changes the course assigned to that teacher to null to ensure that several course are not assigned to the same teacher.
                 for (Teacher teachArray : teachers) {
                     if (teachArray != null && teachArray.getCourse() != null && teachArray.getCourse().equals(course)) {
                         teachArray.setCourse(null);
                         System.out.printf("\nTeacher %s unassigned from course %s. ", teachArray.getId(), courseId);
+                        break;
                     }
                 }
+                // Assigns the course to the course array in object teacher
+                // and the teacher to the teacher array in the object course
                 teacher.setCourse(course);
                 course.setTeacher(teacher);
-                System.out.printf("\nTeacher %s assigned successfully to course %s\nLatest course info: %s\nLatest teacher info: %s\n", teacherId, courseId, course, teacher);
+                System.out.printf("\nTeacher %s assigned successfully to course %s\n" +
+                        "Latest course info: %s\nLatest teacher info: %s\n", teacherId, courseId, course, teacher);
             } else {
-                System.out.printf("\nCannot find any course match with courseId %s, modify teacher %s for course %s failed.\n", courseId, teacherId, courseId);
+                System.out.printf("\nCannot find any course match with courseId %s, " +
+                        "modify teacher %s for course %s failed.\n", courseId, teacherId, courseId);
             }
         } else {
-            System.out.printf("\nCannot find any teacher match with teacherId %s, modify teacher %s for course %s failed.\n", teacherId, teacherId, courseId);
+            System.out.printf("\nCannot find any teacher match with teacherId %s, " +
+                    "modify teacher %s for course %s failed.\n", teacherId, teacherId, courseId);
         }
-
     }
 
     /**
-     * prints all departments
+     * prints all departments that are nor null
+     * @author Jameel Hassan
      */
     public void printDepartments() {
         String departmentString = "\n";
@@ -271,11 +329,12 @@ public class SchoolManagementSystem {
                 departmentString += department + "\n";
             }
         }
-        System.out.print("\nDisplaying departments: " + departmentString);
+        System.out.print("\nDisplaying departments:\n---------------------- " + departmentString);
     }
 
     /**
-     * prints all students
+     * prints all students that are not null
+     * @author Jameel Hassan
      */
     public void printStudents() {
         String studentString = "\n";
@@ -285,11 +344,12 @@ public class SchoolManagementSystem {
                 studentString += student + "\n";
             }
         }
-        System.out.print("\nDisplaying students: " + studentString);
+        System.out.print("\nDisplaying students:\n----------------------" + studentString);
     }
 
     /**
-     * prints all teachers
+     * prints all teachers that are not null
+     * @author Jameel Hassan
      */
     public void printTeacher() {
         String teacherString = "\n";
@@ -299,12 +359,12 @@ public class SchoolManagementSystem {
                 teacherString += teacher + "\n";
             }
         }
-        System.out.print("\nDisplaying teachers: " + teacherString);
-
+        System.out.print("\nDisplaying teachers:\n----------------------" + teacherString);
     }
 
     /**
-     * prints all courses
+     * prints all courses that are not null
+     * @author Jameel Hassan
      */
     public void printCourses() {
         String courseString = "\n";
@@ -314,6 +374,6 @@ public class SchoolManagementSystem {
                 courseString += course + "\n";
             }
         }
-        System.out.print("\nDisplaying courses: " + courseString);
+        System.out.print("\nDisplaying courses:\n----------------------" + courseString);
     }
 }
